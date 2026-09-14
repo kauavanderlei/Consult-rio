@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consultório Bem-Estar · Sistema de Gestão</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css')}}"
+    />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <circle
+              cx="15"
+              cy="15"
+              r="14"
+              stroke="#EAF1EE"
+              stroke-width="1.4"
+            />
+            <path
+              d="M15 8v14M8 15h14"
+              stroke="#EAF1EE"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+          <div>
+            <div class="brand-name">Consultório Bem-Estar</div>
+            <div class="brand-sub">Sistema de gestão</div>
+          </div>
+        </div>
+
+        <nav>
+          <button
+            class="nav-btn active"
+            data-page="dashboard"
+            onclick="mudarPagina('dashboard', this)"
+          >
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="3" width="7" height="9" rx="1.5" />
+              <rect x="14" y="3" width="7" height="5" rx="1.5" />
+              <rect x="14" y="12" width="7" height="9" rx="1.5" />
+              <rect x="3" y="16" width="7" height="5" rx="1.5" />
+            </svg>
+            Painel
+          </button>
+          <button
+            class="nav-btn"
+            data-page="pacientes"
+            onclick="mudarPagina('pacientes', this)"
+          >
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <circle cx="9" cy="8" r="3.2" />
+              <path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" />
+              <circle cx="18" cy="8.5" r="2.3" />
+              <path d="M15.5 14.3c2.6.3 4.5 2.2 4.5 5.2" />
+            </svg>
+            Pacientes
+          </button>
+          <button
+            class="nav-btn"
+            data-page="agenda"
+            onclick="mudarPagina('agenda', this)"
+          >
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="4.5" width="18" height="16" rx="2" />
+              <path d="M3 9.5h18M8 3v3M16 3v3" />
+            </svg>
+            Agenda
+          </button>
+          <button
+            class="nav-btn"
+            data-page="nova-consulta"
+            onclick="mudarPagina('nova-consulta', this)"
+          >
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 8v8M8 12h8" />
+            </svg>
+            Nova consulta
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="avatar">DR</div>
+          <div class="who">
+            <strong>Dra. Renata Alves</strong>
+            <span>Clínica Geral</span>
+          </div>
+        </div>
+      </aside>
+
+      <main>
+        <section class="page active" id="page-dashboard">
+          <div class="page-head">
+            <div>
+              <h1>Bom dia, Dra. Renata</h1>
+              <div class="today">Segunda-feira, 31 de agosto</div>
+            </div>
+            <button
+              class="btn"
+              onclick="
+                mudarPagina(
+                  'nova-consulta',
+                  document.querySelector('[data-page=nova-consulta]'),
+                )
+              "
+            >
+              Agendar consulta
+            </button>
+          </div>
+
+          <div class="stat-row">
+            <div class="stat">
+              <div class="num">6</div>
+              <div class="label">Consultas hoje</div>
+            </div>
+            <div class="stat">
+              <div class="num">128</div>
+              <div class="label">Pacientes cadastrados</div>
+            </div>
+            <div class="stat">
+              <div class="num">14:30</div>
+              <div class="label">Próxima consulta</div>
+            </div>
+          </div>
+
+          <p class="section-title">Próximas consultas</p>
+          <div class="panel">
+            <table>
+              <thead>
+                <tr>
+                  <th>Paciente</th>
+                  <th>Horário</th>
+                  <th>Motivo</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for consulta in consultas %}
+                <tr>
+                  <td>{{ consulta.data.strftime('%d/%m') }}</td>
+                  <td>{{ consulta.hora.strftime('%H:%M') }}</td>
+                  <td>{{ consulta.paciente.nome }}</td>
+                  <td>{{ consulta.motivo }}</td>
+                  <td>
+                    <span class="badge {{ consulta.status.lower() }}"
+                      >{{ consulta.status }}</span
+                    >
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="page" id="page-pacientes">
+          <div class="page-head">
+            <div>
+              <h1>Pacientes</h1>
+              <div class="today">128 pacientes cadastrados</div>
+            </div>
+            <button class="btn" onclick="alternarFormPaciente()">
+              + Novo paciente
+            </button>
+          </div>
+
+          <div class="form-panel hidden" id="form-paciente">
+            <h3 style="margin-bottom: 4px">Cadastrar paciente</h3>
+            <p class="hint">
+              Os campos abaixo já estão prontos para virar um POST para o Flask
+              (veja o atributo "name" de cada input).
+            </p>
+            <form action="/pacientes/novo" method="POST">
+              <div class="field-grid">
+                <div class="field">
+                  <label for="nome">Nome completo</label>
+                  <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    placeholder="Ex: Maria Fernandes"
+                    required
+                  />
+                </div>
+                <div class="field">
+                  <label for="nascimento">Data de nascimento</label>
+                  <input
+                    type="date"
+                    id="nascimento"
+                    name="nascimento"
+                    required
+                  />
+                </div>
+                <div class="field">
+                  <label for="telefone">Telefone</label>
+                  <input
+                    type="tel"
+                    id="telefone"
+                    name="telefone"
+                    placeholder="(00) 00000-0000"
+                  />
+                </div>
+                <div class="field">
+                  <label for="convenio">Convênio</label>
+                  <select id="convenio" name="convenio">
+                    <option value="particular">Particular</option>
+                    <option value="unimed">Unimed</option>
+                    <option value="bradesco">Bradesco Saúde</option>
+                    <option value="sus">SUS</option>
+                  </select>
+                </div>
+                <div class="field full">
+                  <label for="observacoes">Observações</label>
+                  <textarea
+                    id="observacoes"
+                    name="observacoes"
+                    placeholder="Alergias, condições preexistentes..."
+                  ></textarea>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn">Salvar paciente</button>
+                <button
+                  type="button"
+                  class="btn-ghost btn"
+                  onclick="alternarFormPaciente()"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="toolbar">
+            <div class="search">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#52655F"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="M21 21l-4-4" />
+              </svg>
+              <input type="text" placeholder="Buscar paciente..." />
+            </div>
+          </div>
+
+          <div class="panel">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Idade</th>
+                  <th>Convênio</th>
+                  <th>Última consulta</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for paciente in pacientes %}
+                <tr>
+                  <td>
+                    <div class="who-cell">
+                      <div class="avatar">{{ paciente.nome[:2].upper() }}</div>
+                      {{ paciente.nome }}
+                    </div>
+                  </td>
+                  <td>{{ paciente.nascimento.strftime('%d/%m/%Y') }}</td>
+                  <td>{{ paciente.convenio }}</td>
+                  <td>—</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="page" id="page-agenda">
+          <div class="page-head">
+            <div>
+              <h1>Agenda</h1>
+              <div class="today">Todas as consultas cadastradas</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Horário</th>
+                  <th>Paciente</th>
+                  <th>Motivo</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>31/08</td>
+                  <td>10:00</td>
+                  <td>João Marques</td>
+                  <td>Retorno · pressão arterial</td>
+                  <td><span class="badge confirmada">Confirmada</span></td>
+                </tr>
+                <tr>
+                  <td>31/08</td>
+                  <td>11:15</td>
+                  <td>Larissa Costa</td>
+                  <td>Consulta de rotina</td>
+                  <td><span class="badge pendente">Pendente</span></td>
+                </tr>
+                <tr>
+                  <td>31/08</td>
+                  <td>14:30</td>
+                  <td>Pedro Teixeira</td>
+                  <td>Exame de resultado</td>
+                  <td><span class="badge confirmada">Confirmada</span></td>
+                </tr>
+                <tr>
+                  <td>01/09</td>
+                  <td>09:00</td>
+                  <td>Maria Fernandes</td>
+                  <td>Primeira consulta</td>
+                  <td><span class="badge pendente">Pendente</span></td>
+                </tr>
+                <tr>
+                  <td>02/09</td>
+                  <td>15:45</td>
+                  <td>Carlos Eduardo</td>
+                  <td>Retorno</td>
+                  <td><span class="badge confirmada">Confirmada</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="page" id="page-nova-consulta">
+          <div class="page-head">
+            <div>
+              <h1>Agendar consulta</h1>
+              <div class="today">
+                Preencha os dados para marcar um novo horário
+              </div>
+            </div>
+          </div>
+
+          <div class="form-panel">
+            <form action="/consultas/novo" method="POST">
+              <div class="field-grid">
+                <div class="field full">
+                  <label for="paciente">Paciente</label>
+                  <select id="paciente" name="paciente_id" required>
+                    <option value="">Selecione um paciente</option>
+
+                    {% for paciente in pacientes %}
+                    <option value="{{ paciente.id }}">{{paciente.nome}}</option>
+                    {% endfor %}
+                    
+                  </select>
+
+                </div>
+                <div class="field">
+                  <label for="data">Data</label>
+                  <input type="date" id="data" name="data" required />
+                </div>
+                <div class="field">
+                  <label for="hora">Horário</label>
+                  <input type="time" id="hora" name="hora" required />
+                </div>
+                <div class="field full">
+                  <label for="motivo">Motivo da consulta</label>
+                  <input
+                    type="text"
+                    id="motivo"
+                    name="motivo"
+                    placeholder="Ex: retorno, exame de rotina..."
+                  />
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn">Confirmar agendamento</button>
+              </div>
+            </form>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js')}}"></script>
+  </body>
+</html>
